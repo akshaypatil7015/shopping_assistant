@@ -1,0 +1,24 @@
+[project]
+name = "shopping-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "akshaypatil7015", email = "152008046+akshaypatil7015@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "jupyter>=1.1.1",
+    "minsearch>=0.2.0",
+    "openai>=2.53.0",
+    "python-dotenv>=1.2.2",
+    "requests>=2.34.2",
+    "sentence-transformers>=5.7.0",
+]
+
+[project.scripts]
+shopping-assistant = "shopping_assistant:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
