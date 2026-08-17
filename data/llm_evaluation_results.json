@@ -1,0 +1,669 @@
+{
+  "model": "gpt-5.6",
+  "evaluation_file": "D:\\shopping_assistant\\data\\llm_evaluation_queries.json",
+  "summary": {
+    "queries_evaluated": 20,
+    "prompt_a": {
+      "relevance": 4.95,
+      "groundedness": 4.9,
+      "constraint_adherence": 4.9,
+      "answer_quality": 4.8,
+      "total": 19.55
+    },
+    "prompt_b": {
+      "relevance": 5.0,
+      "groundedness": 4.8,
+      "constraint_adherence": 4.85,
+      "answer_quality": 4.7,
+      "total": 19.35
+    },
+    "wins": {
+      "A": 12,
+      "B": 6,
+      "Tie": 2
+    },
+    "best_prompt": "Prompt A"
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "Suggest me a Samsung smartphone under 80000",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        420,
+        128,
+        30,
+        28,
+        273
+      ],
+      "prompt_a_answer": "### Top recommendation\n\n- **Samsung Galaxy A55 5G (Product ID: 28)** — **₹42,999**, rated **4.9/5**\n  - Snapdragon 7 Gen 3 processor\n  - 12GB RAM and 512GB storage\n  - 6.6-inch FHD+ 120Hz Super AMOLED display\n  - 50MP main camera with OIS and 64MP periscope camera with 3x optical zoom\n  - 5,500mAh battery with 100W charging  \n  **Why choose it:** It has the highest rating in the provided catalog and offers a strong combination of performance, cameras, storage, and fast charging.\n\n### Other good options\n\n| Smartphone | Price | Rating | Best for |\n|---|---:|---:|---|\n| **Samsung Galaxy M55 5G (Product ID: 30)** | ₹29,999 | 3.9 | Value, 16GB RAM, 1TB storage and 200MP camera |\n| **Samsung Galaxy A55 5G (Product ID: 273)** | ₹42,999 | 3.9 | LTPO OLED display, 5x optical zoom and wireless charging |\n| **Samsung Galaxy M55 5G (Product ID: 128)** | ₹26,999 | 3.9 | Lowest price, 5,500mAh battery and 100W charging |\n\n**My pick:** **Samsung Galaxy A55 5G (Product ID: 28)**.",
+      "prompt_b_answer": "### Best recommendation\n**Samsung Galaxy A55 5G (Product ID: 28)** — **₹42,999**\n- Colour: Oasis Green\n- Rating: **4.9**\n- Snapdragon 7 Gen 3, 12GB RAM, 512GB storage\n- 6.6-inch FHD+ 120Hz Super AMOLED display\n- 50MP main camera with OIS and 64MP 3x telephoto\n- 5500mAh battery with 100W charging\n\n### Other good options\n- **Galaxy A55 5G (ID: 420)** — ₹45,999: 16GB RAM, 1TB storage, 200MP main camera; rated 4.7.\n- **Galaxy M55 5G (ID: 30)** — ₹29,999: 16GB RAM, 1TB storage and 200MP camera; rated 3.9.\n\n**My pick:** Galaxy A55 5G, Product ID 28, for its strong overall specifications and highest rating.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 4,
+          "total": 19
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "B",
+        "reason": "Both answers are relevant, grounded, and meet the Samsung and budget constraints. Answer B is slightly better because its alternatives include the higher-rated Product 420 and it presents the recommendation more concisely."
+      }
+    },
+    {
+      "id": 2,
+      "query": "Suggest me an iPhone under 100000",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        399,
+        448,
+        7,
+        350,
+        203
+      ],
+      "prompt_a_answer": "### Recommended: **Apple iPhone 15 (Product ID: 203)**\n- **Price:** ₹89,900\n- **Rating:** 4.5/5\n- **Colour:** Ocean Cyan\n- **Highlights:** 16GB RAM, 512GB storage, 6.7-inch 1–120Hz LTPO OLED display, 5x optical-zoom camera, and 5050mAh battery with wired and wireless charging.\n\n**Lower-priced alternative:** **Apple iPhone 15 (Product ID: 7)** at **₹79,900**, rated **4.0/5**, with a 120Hz AMOLED display, 2x optical zoom, and 100W wired/66W wireless charging.",
+      "prompt_b_answer": "### Best value under ₹1,00,000\n\n**Apple iPhone 15 – Emerald Green (Product ID: 7)**  \n- **Price:** ₹79,900  \n- **Rating:** 4.0/5  \n- **Display:** 6.7-inch 120Hz Flexible AMOLED  \n- **Cameras:** 50MP main with OIS + 50MP telephoto with 2x optical zoom  \n- **Battery:** 5200mAh with 100W wired and 66W wireless charging  \n\nIt’s the lowest-priced iPhone in the available catalog and comfortably fits your budget.\n\nFor a higher-rated option, consider the **iPhone 15 Ocean Cyan (Product ID: 203)** at **₹89,900**, rated **4.5/5**.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "A",
+        "reason": "Both answers are clear, fully grounded, and meet the budget and brand constraints. A has a slight edge by recommending a higher-rated model while also providing the lowest-priced alternative."
+      }
+    },
+    {
+      "id": 3,
+      "query": "Suggest me a smartphone under 30000",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        122,
+        73,
+        416,
+        220,
+        171
+      ],
+      "prompt_a_answer": "### Best overall pick under ₹30,000\n\n- **Nothing Phone (2a), Product ID 73 — ₹23,999**\n  - **Rating:** 4.8/5\n  - Snapdragon 6 Gen 1, LPDDR5 RAM and UFS 3.1 storage\n  - 6.7-inch LTPO OLED display with 1–120Hz refresh rate\n  - 50MP OIS main camera, 48MP ultrawide and 48MP 5x telephoto\n  - 5050mAh battery, 30W wired and 23W wireless charging  \n  **Why choose it:** It is the least expensive option and has the highest rating in the provided catalog.\n\n### Alternatives\n\n- **For battery and fastest charging:** **Nothing Phone (2a), Product ID 416 — ₹25,999**  \n  5500mAh battery, 120W charging, 1.5K AMOLED display and 50MP telephoto system. Rating: 4.0.\n\n- **For camera and premium display specifications:** **Nothing Phone (2a), Product ID 171 — ₹25,999**  \n  200MP main camera, dual telephoto cameras, 6.8-inch QHD+ AMOLED display and 12GB RAM/256GB storage. Rating: 4.1.\n\n**Recommendation:** Choose **Nothing Phone (2a), Product ID 73** for the strongest overall value.",
+      "prompt_b_answer": "### Best overall: Nothing Phone (2a) — Product ID 73\n- **Price:** ₹23,999\n- **Rating:** 4.8\n- **Why:** Snapdragon 6 Gen 1, 6.7-inch LTPO OLED 1–120Hz display, 50MP OIS main camera, 5x optical telephoto, 5050mAh battery, and wired/wireless charging.\n\n### Other strong options\n- **Product ID 416 — ₹25,999:** Best for battery and charging, with a **5500mAh battery and 120W charging**; rated 4.0.\n- **Product ID 171 — ₹25,999:** Best for display and cameras, featuring a **QHD+ 120Hz AMOLED display**, 200MP main camera, and 5x periscope telephoto; rated 4.1.\n\n**Recommendation:** Choose **Product ID 73** for the best balance of price, features, and customer rating.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "A",
+        "reason": "Both answers are relevant, fully grounded, within budget, and well structured. Answer A narrowly wins by providing slightly more specification detail and a clearer value-based justification."
+      }
+    },
+    {
+      "id": 4,
+      "query": "Suggest me a Samsung smartphone between 30000 and 80000",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        420,
+        373,
+        100,
+        128,
+        50
+      ],
+      "prompt_a_answer": "### Recommended: **Samsung Galaxy A55 5G (Product ID: 420)**\n\n- **Price:** ₹45,999\n- **Rating:** 4.7/5\n- **Colour:** Peach Fuzz\n- **Performance:** Exynos 1480 processor, 16GB LPDDR5X RAM, 1TB UFS 4.0 storage\n- **Display:** 6.67-inch 1.5K curved AMOLED, 120Hz, 1800-nit peak brightness\n- **Camera:** 200MP main camera with OIS, 8MP ultrawide and 2MP macro\n- **Battery:** 5000mAh with 33W fast charging\n- **Protection:** IP68\n\nThis is the only Samsung smartphone in the provided catalog within your ₹30,000–₹80,000 budget, and it offers substantial RAM and storage along with a high-resolution camera.",
+      "prompt_b_answer": "### Recommended: Samsung Galaxy A55 5G — Product ID 420\n\n- **Price:** ₹45,999\n- **Colour:** Peach Fuzz\n- **Rating:** 4.7/5\n- **Display:** 6.67-inch 1.5K curved AMOLED, 120Hz\n- **Performance:** Exynos 1480, 16GB RAM, 1TB storage\n- **Camera:** 200MP main camera with OIS\n- **Battery:** 5,000mAh with 33W fast charging\n- **Protection:** IP68\n\nThis is the only Samsung smartphone in the provided catalog within your ₹30,000–₹80,000 budget.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "A",
+        "reason": "Both answers correctly recommend the only Samsung phone listed within the ₹30,000–₹80,000 range and use fully supported details. A wins narrowly because it provides slightly more useful camera and display information."
+      }
+    },
+    {
+      "id": 5,
+      "query": "What is the best smartphone available under 50000?",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        79,
+        269,
+        226,
+        219,
+        471
+      ],
+      "prompt_a_answer": "## Best overall under ₹50,000\n\n**Samsung Galaxy M55 5G (Product ID: 471) — ₹26,999, rated 4.7/5**\n\nWhy it stands out:\n- **Display:** 6.8-inch QHD+ 120Hz Dynamic AMOLED 2X, 2600-nit peak brightness, Gorilla Armor\n- **Performance:** Snapdragon 7s Gen 2, 12GB LPDDR5X RAM, 256GB UFS 4.0 storage\n- **Cameras:** 200MP OIS primary, 50MP 5x periscope, 10MP 3x telephoto, and 12MP ultrawide\n- **Battery:** 5000mAh with 45W wired, 15W wireless, and reverse wireless charging\n- **Colour:** Natural Titanium\n\nIt offers the strongest overall combination of display and camera versatility among the catalog options under ₹50,000.\n\n**Value alternative:** **Nothing Phone (2a) (Product ID: 269)** at ₹25,999, rated 4.8/5, with 16GB RAM, 512GB storage, dual 50MP cameras, and 90W charging.",
+      "prompt_b_answer": "### Best overall under ₹50,000: Samsung Galaxy M55 5G — Product ID 471\n\n- **Price:** ₹26,999\n- **Rating:** 4.7/5\n- **Performance:** Snapdragon 7s Gen 2, 12GB LPDDR5X RAM, 256GB UFS 4.0 storage\n- **Display:** 6.8-inch QHD+ 120Hz Dynamic AMOLED 2X, 2600 nits, Gorilla Armor\n- **Cameras:** 200MP OIS main, 50MP 5x periscope, 10MP 3x telephoto, 12MP ultrawide\n- **Battery:** 5000mAh with 45W wired, 15W wireless, and reverse wireless charging\n\n**Why it’s the best:** It offers the most capable camera system, highest-resolution display, and the most complete charging options among the listed phones while remaining far below ₹50,000.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "A",
+        "reason": "Both answers are accurate, well-grounded, and directly address the budget requirement. Answer A wins narrowly because it also provides a useful value alternative."
+      }
+    },
+    {
+      "id": 6,
+      "query": "Suggest me a good gaming smartphone under 50000",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        122,
+        177,
+        269,
+        226,
+        73
+      ],
+      "prompt_a_answer": "### Best gaming pick under ₹50,000\n\n**Nothing Phone (2a) — Product ID 269 — ₹25,999, Rating 4.8**\n\n- MediaTek Dimensity 7050 processor\n- **16GB LPDDR5X RAM** and **512GB UFS 4.0 storage**\n- 6.74-inch 1.5K AMOLED display with **120Hz refresh rate**\n- 5000mAh battery with **90W charging**\n- Optimized thermal management\n\nIts large RAM, fast storage, 120Hz display, and quick charging make it the strongest gaming-oriented package in the available catalog.\n\n### Alternative\n\n**Samsung Galaxy M55 5G — Product ID 177 — ₹26,999, Rating 4.8**\n\n- Snapdragon 7s Gen 2\n- 12GB LPDDR5X RAM and 256GB UFS 4.0 storage\n- 6.7-inch 120Hz AMOLED display\n- 5200mAh battery\n- 100W wired and 66W wireless charging\n\nChoose the Samsung if you prioritize a larger battery and faster charging. The available information does not provide gaming benchmarks, frame rates, or detailed cooling specifications.",
+      "prompt_b_answer": "### Best gaming pick: Nothing Phone (2a) — Product ID 269\n\n- **Price:** ₹25,999\n- **Processor:** MediaTek Dimensity 7050\n- **Memory:** 16GB LPDDR5X RAM, 512GB UFS 4.0 storage\n- **Display:** 6.74-inch 1.5K AMOLED, 120Hz\n- **Battery:** 5000mAh with 90W Turbo Charge\n- **Rating:** 4.8/5\n\nIts high RAM, fast storage, 120Hz display, optimized thermal management, and quick charging make it the strongest gaming-oriented option in the available catalog.\n\n**Alternative:** Samsung Galaxy M55 5G (Product ID 177) at ₹26,999, with Snapdragon 7s Gen 2, 12GB RAM, 120Hz AMOLED display, 5200mAh battery, and 100W charging.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 4,
+          "total": 19
+        },
+        "winner": "A",
+        "reason": "Both answers are relevant, grounded, and within budget. Answer A is slightly better because it clearly explains when to choose the alternative and appropriately notes that gaming benchmarks, frame rates, and detailed cooling data are unavailable."
+      }
+    },
+    {
+      "id": 7,
+      "query": "Suggest me a smartphone with a good camera under 60000",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        273,
+        73,
+        317,
+        133,
+        275
+      ],
+      "prompt_a_answer": "### Best camera-focused pick under ₹60,000\n\n- **Samsung Galaxy M55 5G (Product ID: 275) — ₹26,999**\n  - 1-inch **50MP Sony LYT-900 primary camera**\n  - Stepless variable aperture from **f/1.63 to f/4.0**\n  - Camera co-engineered with **Leica**\n  - Rating: **4.8/5**\n\n**Why I recommend it:** It has the most camera-focused primary-sensor specifications in the available catalog and costs well below your budget.\n\n### Alternatives\n\n- **Samsung Galaxy A55 5G (Product ID: 273) — ₹42,999:** 50MP OIS main, 48MP ultrawide with macro, and 48MP telephoto with **5x optical zoom**. Best for camera versatility.\n- **Nothing Phone (2) (Product ID: 317) — ₹39,999:** 50MP Sony LYT-808 OIS main, 50MP portrait telephoto with **2x optical zoom**, and AI image processing. Good for portraits.",
+      "prompt_b_answer": "### Best camera pick under ₹60,000\n\n**Samsung Galaxy M55 5G (Product ID: 275) — ₹26,999**\n\n- **1-inch 50MP Sony LYT-900 primary camera**\n- Stepless variable aperture from **f/1.63 to f/4.0**\n- Camera co-engineered with **Leica**\n- **4.8 rating**\n- 5000mAh battery with 120W charging\n\nThis is my top recommendation for camera quality based on the available specifications. Note that the catalog does not specify ultrawide or telephoto cameras for this model.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 4,
+          "constraint_adherence": 5,
+          "answer_quality": 4,
+          "total": 18
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "B",
+        "reason": "Both answers recommend an eligible camera-focused phone using the retrieved specifications. Answer B is more precise because it explicitly acknowledges that ultrawide and telephoto details are missing, while Answer A's claim that the Galaxy A55 is best for versatility overlooks other catalog models with the same listed camera setup."
+      }
+    },
+    {
+      "id": 8,
+      "query": "Suggest me a smartphone with good battery life under 40000",
+      "type": "recommendation",
+      "retrieved_product_ids": [
+        122,
+        422,
+        462,
+        315,
+        182
+      ],
+      "prompt_a_answer": "### Best choice: **Motorola Edge 50 Pro (Product ID: 315)**\n\n- **Price:** ₹35,999\n- **Battery:** 5,000mAh\n- **Charging:** 120W FlashCharge—claimed 0–100% in about 27 minutes\n- **Rating:** 4.5/5\n- **Memory:** 12GB RAM and 256GB storage\n\nIt has the largest battery and fastest specified charging among the listed phones under ₹40,000, making it the strongest option for battery life.",
+      "prompt_b_answer": "### Best pick for battery life under ₹40,000\n\n**Motorola Edge 50 Pro — Natural Titanium (Product ID: 315)**  \n- **Price:** ₹35,999  \n- **Battery:** 5,000mAh graphite battery  \n- **Charging:** 120W FlashCharge, with 0–100% charging in approximately 27 minutes  \n- **Rating:** 4.5/5  \n- **Other highlights:** 12GB RAM, 256GB storage, and a 6.78-inch 144Hz LTPO AMOLED display  \n\nThis is the strongest battery-focused option in the catalog: the other listed phones have smaller 4,422mAh batteries and slower 15W wireless charging.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 4,
+          "constraint_adherence": 5,
+          "answer_quality": 4,
+          "total": 18
+        },
+        "winner": "A",
+        "reason": "Both recommend the best-supported option within budget, but Answer A more precisely says it has the fastest specified charging. Answer B potentially misleads by directly comparing the selected phone's 120W charging with the other phones' 15W wireless charging, since their wired charging speeds are not provided."
+      }
+    },
+    {
+      "id": 9,
+      "query": "Compare the Samsung smartphones you found",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        420,
+        30,
+        3,
+        100,
+        371
+      ],
+      "prompt_a_answer": "## Samsung smartphone comparison\n\n| Phone | Price / Rating | Processor, RAM & Storage | Display | Rear cameras | Battery & charging |\n|---|---:|---|---|---|---|\n| **Samsung Galaxy M55 5G (Product ID 30)** | **₹29,999 / 3.9** | Snapdragon 7s Gen 2, 16GB LPDDR5X, 1TB UFS 4.0 | 6.67-inch 1.5K curved AMOLED, 120Hz, 1800 nits, IP68 | 200MP OIS + 8MP ultrawide + 2MP macro; 4x in-sensor zoom | 5000mAh; 33W wired, 5W reverse wired |\n| **Samsung Galaxy A55 5G (Product ID 371)** | **₹42,999 / 4.9** | Dimensity 7200 Pro, 16GB LPDDR5X, 512GB UFS 4.0 | 6.8-inch QHD+ Dynamic AMOLED 2X, 120Hz, 2600 nits, Gorilla Armor | 200MP OIS + 50MP 5x periscope + 10MP 3x telephoto + 12MP ultrawide | 5000mAh; 45W wired, 15W wireless, reverse wireless |\n| **Samsung Galaxy A55 5G (Product ID 420)** | **₹45,999 / 4.7** | Exynos 1480, 16GB LPDDR5X, 1TB UFS 4.0 | 6.67-inch 1.5K curved AMOLED, 120Hz, 1800 nits, IP68 | 200MP OIS + 8MP ultrawide + 2MP macro; 4x in-sensor zoom | 5000mAh; 33W wired, 5W reverse wired |\n| **Samsung Galaxy S24 (Product ID 3)** | **₹79,999 / 3.9** | Google Tensor G3, 12GB LPDDR5X, 256GB UFS 4.0 | 6.7-inch Super Actua LTPO OLED, adaptive 1–120Hz, 2400 nits | 50MP OIS + 48MP ultrawide with macro + 48MP 5x optical telephoto | 5050mAh; 30W wired, 23W wireless |\n| **Samsung Galaxy S24 Plus (Product ID 100)** | **₹1,09,999 / 4.5** | Dimensity 9300, 12GB LPDDR5X, 512GB UFS 4.0 | 6.67-inch 1.5K curved AMOLED, 120Hz, 1800 nits, IP68 | 200MP OIS + 8MP ultrawide + 2MP macro; 4x in-sensor zoom | 5000mAh; 33W wired, 5W reverse wired |\n\n### Key takeaways\n\n- **Lowest price:** **Samsung Galaxy M55 5G (Product ID 30)**. Its listed display, cameras, storage, and charging are otherwise the same as the Peach Fuzz A55, but it has a different processor and lower rating.\n- **Strongest listed overall package:** **Samsung Galaxy A55 5G (Product ID 371)**. It has the highest rating, brightest/QHD+ display, two optical telephoto cameras, and the fastest wired charging.\n- **Most storage among the higher-rated options:** **Samsung Galaxy A55 5G (Product ID 420)** offers 1TB and a 4.7 rating.\n- **Adaptive display and fastest wireless charging:** **Samsung Galaxy S24 (Product ID 3)** has a 1–120Hz LTPO screen and 23W wireless charging.\n- **Most expensive:** **Samsung Galaxy S24 Plus (Product ID 100)** at ₹1,09,999. Based on the listed specifications, its main advantages are the Dimensity 9300 processor and flagship classification, while the catalog does not provide benchmark results to quantify performance.\n\n**Best value from these listings:** Galaxy M55 5G (ID 30).  \n**Best display/camera/charging combination:** Galaxy A55 5G (ID 371).",
+      "prompt_b_answer": "### Samsung smartphone comparison\n\n| Model (Product ID) | Price / Rating | Processor, RAM & Storage | Display | Cameras | Battery & Charging |\n|---|---:|---|---|---|---|\n| **Galaxy M55 5G (30)** | **₹29,999 / 3.9** | Snapdragon 7s Gen 2, 16GB RAM, 1TB | 6.67″ 1.5K curved AMOLED, 120Hz, 1800 nits, IP68 | 200MP OIS + 8MP ultrawide + 2MP macro; 4x lossless zoom | 5000mAh, 33W wired, 5W reverse wired |\n| **Galaxy A55 5G (371), Ocean Cyan** | **₹42,999 / 4.9** | Dimensity 7200 Pro, 16GB RAM, 512GB | 6.8″ QHD+ Dynamic AMOLED 2X, 120Hz, 2600 nits, Gorilla Armor | 200MP OIS + 50MP 5x periscope + 10MP 3x telephoto + 12MP ultrawide | 5000mAh, 45W wired, 15W wireless, reverse wireless |\n| **Galaxy A55 5G (420), Peach Fuzz** | **₹45,999 / 4.7** | Exynos 1480, 16GB RAM, 1TB | 6.67″ 1.5K curved AMOLED, 120Hz, 1800 nits, IP68 | 200MP OIS + 8MP ultrawide + 2MP macro; 4x lossless zoom | 5000mAh, 33W wired, 5W reverse wired |\n| **Galaxy S24 (3)** | **₹79,999 / 3.9** | Google Tensor G3, 12GB RAM, 256GB | 6.7″ LTPO OLED, adaptive 1–120Hz, 2400 nits | 50MP OIS + 48MP ultrawide/macro + 48MP 5x optical telephoto | 5050mAh, 30W wired, 23W wireless |\n| **Galaxy S24 Plus (100)** | **₹1,09,999 / 4.5** | Dimensity 9300, 12GB RAM, 512GB | 6.67″ 1.5K curved AMOLED, 120Hz, 1800 nits, IP68 | 200MP OIS + 8MP ultrawide + 2MP macro; 4x lossless zoom | 5000mAh, 33W wired, 5W reverse wired |\n\n### Quick takeaways\n\n- **Best overall on the listed specifications:** **Galaxy A55 5G (Product 371)** — highest rating, brightest and largest display, two optical telephoto cameras, and the most complete charging options.\n- **Best value and lowest price:** **Galaxy M55 5G (Product 30)** — 16GB RAM and 1TB storage for ₹29,999, though its rating is lower.\n- **Best for maximum storage with a higher rating:** **Galaxy A55 5G (Product 420)** — 1TB storage and a 4.7 rating.\n- **Best LTPO display and wireless charging speed:** **Galaxy S24 (Product 3)** — adaptive 1–120Hz panel, 2400-nit brightness, and 23W wireless charging.\n- **Most expensive:** **Galaxy S24 Plus (Product 100)** at ₹1,09,999; based on the listed details, the less expensive A55 (371) offers stronger display, camera versatility, and charging specifications.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "B",
+        "reason": "Both answers are complete, well structured, and grounded in the retrieved context. B wins narrowly because it includes distinguishing colors for the two A55 listings and makes slightly more precise comparative takeaways."
+      }
+    },
+    {
+      "id": 10,
+      "query": "Compare the first two products",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        89,
+        199,
+        232,
+        59,
+        428
+      ],
+      "prompt_a_answer": "## Realme P1 Pro 5G vs Samsung Galaxy S24\n\n| Feature | **Realme P1 Pro 5G (Product ID: 89)** | **Samsung Galaxy S24 (Product ID: 199)** |\n|---|---|---|\n| Price | **₹21,999** | ₹74,999 |\n| Rating | 4.1 | 4.1 |\n| Colour | Midnight Blue | Emerald Green |\n| Processor | Qualcomm Snapdragon 695 5G | Google Tensor G3 |\n| RAM | **16GB LPDDR5X** | LPDDR5; capacity not specified |\n| Storage | **512GB UFS 4.0** | UFS 3.1; capacity not specified |\n| Display | 6.74-inch 1.5K 120Hz AMOLED, 2,150 nits, Aqua Touch | Same listed specifications |\n| Rear cameras | Dual 50MP: primary with OIS + 114° ultrawide | Same listed specifications |\n| Battery | 5,000mAh | 5,000mAh |\n| Charging | 90W Turbo Charge; charger included | 90W Turbo Charge; charger included |\n| Positioning | Budget smartphone | Flagship smartphone |\n\n### Key takeaway\n- **Realme P1 Pro 5G (Product ID: 89)** offers much stronger value based on the listed information: it costs **₹53,000 less**, has the same rating, and matches the Samsung’s listed display, cameras, battery, and charging.\n- **Samsung Galaxy S24 (Product ID: 199)** is positioned as the flagship and uses a different processor, but the provided catalog does not give enough benchmark or performance information to establish which processor is faster.\n\n**Best choice on listed specifications and price:** **Realme P1 Pro 5G (Product ID: 89).**",
+      "prompt_b_answer": "### Realme P1 Pro 5G vs Samsung Galaxy S24\n\n| Feature | **Realme P1 Pro 5G (ID 89)** | **Samsung Galaxy S24 (ID 199)** |\n|---|---|---|\n| Colour | Midnight Blue | Emerald Green |\n| Price | **₹21,999** | ₹74,999 |\n| Rating | 4.1 | 4.1 |\n| Processor | Qualcomm Snapdragon 695 5G | Google Tensor G3 |\n| RAM | **16GB LPDDR5X** | LPDDR5; capacity not specified |\n| Storage | **512GB UFS 4.0** | UFS 3.1; capacity not specified |\n| Display | 6.74-inch 1.5K 120Hz AMOLED, Aqua Touch, 2150 nits | Same listed specifications |\n| Rear cameras | Dual 50MP: primary with OIS + 114° ultrawide | Same listed specifications |\n| Battery | 5000mAh | 5000mAh |\n| Charging | 90W Turbo Charge, included in box | 90W Turbo Charge, included in box |\n\n**Key takeaway:** The Realme costs **₹53,000 less** while matching the Samsung’s listed rating, display, cameras, battery, and charging. It also explicitly offers 16GB RAM and 512GB UFS 4.0 storage. Based solely on the provided specifications, the **Realme P1 Pro 5G offers substantially better value**, while the Galaxy S24 is positioned as the flagship option.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "A",
+        "reason": "Both answers are accurate, relevant, and well structured. A wins narrowly because it explicitly notes that the provided context is insufficient to determine which processor is faster, making its comparison slightly more careful and complete."
+      }
+    },
+    {
+      "id": 11,
+      "query": "Compare the top 3 products",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        199,
+        188,
+        59,
+        286,
+        259
+      ],
+      "prompt_a_answer": "### Top 3 by customer rating\n\n| Feature | Vivo T3 Pro 5G (ID 188) | OnePlus 12 5G (ID 59) | Vivo T3 Pro 5G (ID 286) |\n|---|---|---|---|\n| Rating | **4.5** | 4.2 | 4.2 |\n| Price | **₹26,999** | ₹69,999 | **₹26,999** |\n| Colour | Starlight Silver | Ocean Cyan | Asteroid Black |\n| Processor | MediaTek Dimensity 7050 | Google Tensor G3 | Snapdragon 6 Gen 1 |\n| RAM / storage | LPDDR5X, 256GB UFS 4.0; RAM capacity not specified | **16GB LPDDR5X, 512GB UFS 4.0** | **12GB LPDDR5X, 512GB UFS 4.0** |\n| Display | 6.6-inch FHD+ 120Hz Super AMOLED | 6.74-inch 1.5K 120Hz AMOLED, 2,150 nits | 6.67-inch 1.5K 120Hz AMOLED, Dolby Vision |\n| Rear cameras | 50MP main OIS + 50MP ultrawide/macro + 64MP 3x telephoto | Dual 50MP: main OIS + 114° ultrawide | 50MP 1-inch main OIS + 50MP 4.3x telephoto |\n| Battery | **5,500mAh** | 5,000mAh | **5,500mAh** |\n| Charging | 100W | 90W, charger included | **120W** |\n\n### Which one stands out?\n\n- **Best overall value:** **Vivo T3 Pro 5G (ID 188)** — highest rating, lowest joint price, and a versatile three-camera setup.\n- **Best for RAM and premium display brightness:** **OnePlus 12 5G (ID 59)** — 16GB RAM, 512GB storage, and a stated 2,150-nit display, but considerably more expensive.\n- **Best for zoom and charging:** **Vivo T3 Pro 5G (ID 286)** — 4.3x optical telephoto, 12GB/512GB configuration, and fastest 120W charging at ₹26,999.\n\n**My value pick:** Vivo T3 Pro 5G **(ID 188)**, primarily because of its 4.5 rating, broad camera selection, 5,500mAh battery, and ₹26,999 price.",
+      "prompt_b_answer": "### Top 3 product comparison\n\n| Feature | Samsung Galaxy S24 (ID 199) | Vivo T3 Pro 5G (ID 188) | OnePlus 12 5G (ID 59) |\n|---|---|---|---|\n| Price | ₹74,999 | **₹26,999** | ₹69,999 |\n| Rating | 4.1 | **4.5** | 4.2 |\n| Processor | Google Tensor G3 | MediaTek Dimensity 7050 | Google Tensor G3 |\n| RAM / Storage | LPDDR5 / UFS 3.1; capacities not specified | LPDDR5X / 256GB UFS 4.0; RAM capacity not specified | **16GB LPDDR5X / 512GB UFS 4.0** |\n| Display | 6.74″ 1.5K 120Hz AMOLED, 2,150 nits | 6.6″ FHD+ 120Hz Super AMOLED | 6.74″ 1.5K 120Hz AMOLED, 2,150 nits |\n| Rear cameras | Dual 50MP: OIS primary + 114° ultrawide | 50MP OIS primary + 50MP ultrawide/macro + 64MP periscope, 3x optical zoom | Dual 50MP: OIS primary + 114° ultrawide |\n| Battery | 5,000mAh | **5,500mAh** | 5,000mAh |\n| Charging | 90W Turbo Charge | **100W SUPERVOOC** | 90W Turbo Charge |\n| Colour | Emerald Green | Starlight Silver | Ocean Cyan |\n\n### Quick verdict\n\n- **Best value and camera versatility:** **Vivo T3 Pro 5G** — lowest price, highest rating, largest battery, fastest charging, and the only listed 3x periscope camera.\n- **Best for RAM and storage:** **OnePlus 12 5G** — explicitly includes 16GB RAM and 512GB UFS 4.0 storage, while costing ₹5,000 less than the Galaxy S24.\n- **Samsung Galaxy S24:** Offers essentially the same listed processor, display, cameras, battery, and charging as the OnePlus, but costs more and its RAM/storage capacities aren’t specified.\n\n**Overall based on the provided specifications:** Vivo T3 Pro 5G offers the strongest value; OnePlus 12 5G is the better premium option.",
+      "judge": {
+        "answer_a": {
+          "relevance": 4,
+          "groundedness": 5,
+          "constraint_adherence": 4,
+          "answer_quality": 5,
+          "total": 18
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "B",
+        "reason": "Answer B compares the first three retrieved products, which most directly matches the request. Answer A is accurate and well structured but redefines 'top 3' as the three highest-rated products, replacing the first-listed Samsung with Product 4."
+      }
+    },
+    {
+      "id": 12,
+      "query": "Which of these products is the best value for money?",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        199,
+        85,
+        59,
+        135,
+        259
+      ],
+      "prompt_a_answer": "## Best value: **Honor 200 5G (Product ID: 135)** — ₹37,999\n\nIt offers the strongest price-to-feature balance:\n\n- 12GB LPDDR5X RAM and 256GB UFS 4.0 storage\n- 6.78-inch 1.5K, 144Hz LTPO AMOLED display\n- 50MP Sony LYT-900 primary camera with variable aperture\n- 5,000mAh battery with 120W charging\n- Solid 4.4 rating\n- Costs ₹20,000 less than the **Honor 200 Pro 5G (Product ID: 85)** while sharing many listed display, camera, battery, and charging features\n\nChoose the **Honor 200 Pro 5G** instead if processor performance is your priority, since it has the Snapdragon 8s Gen 3 and the highest rating at 4.9. For overall value, however, the **Honor 200 5G** is the better buy.",
+      "prompt_b_answer": "**Best value for money: Honor 200 5G (Product ID: 135) — ₹37,999**\n\nWhy it stands out:\n- 12GB LPDDR5X RAM and 256GB UFS 4.0 storage\n- 6.78-inch 1.5K 144Hz LTPO AMOLED display\n- 50MP Sony LYT-900 primary camera with variable aperture\n- 5000mAh battery with 120W charging\n- Strong 4.4 rating\n- Costs ₹20,000 less than the similarly equipped Honor 200 Pro 5G\n\nThe **Honor 200 Pro 5G (Product ID: 85)** offers the stronger Snapdragon 8s Gen 3 processor and a higher 4.9 rating, but at ₹57,999. For the best balance of features and price, choose the **Honor 200 5G**.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "A",
+        "reason": "Both answers are direct, well structured, and fully supported by the product context. Answer A wins narrowly because it more precisely explains which listed features the Honor models share."
+      }
+    },
+    {
+      "id": 13,
+      "query": "Which product has the best performance?",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        359,
+        5,
+        369,
+        405,
+        319
+      ],
+      "prompt_a_answer": "**Best performance: Apple iPhone 15 Pro (Product ID: 5)**\n\nBased on the listed specifications, it has the strongest overall hardware combination:\n\n- Qualcomm Snapdragon 8 Gen 3 processor\n- 16GB LPDDR5X RAM\n- 512GB UFS 4.0 storage\n- 144Hz LTPO AMOLED display\n- Price: ₹144,900\n- Rating: 4.5/5\n\nFor a more affordable performance option, consider the **iQOO 12 5G (Product ID: 359)** with Snapdragon 8s Gen 3, 16GB RAM, and 512GB storage for ₹57,999.",
+      "prompt_b_answer": "**Apple iPhone 15 Pro (Product ID: 5)** offers the best performance based on the listed specifications:\n\n- Qualcomm Snapdragon 8 Gen 3 processor\n- 16GB LPDDR5X RAM\n- 512GB UFS 4.0 storage\n- Optimized thermal management\n- 144Hz LTPO AMOLED display\n\nIt costs **₹144,900** and has a **4.5 rating**. No benchmark scores are provided, so this assessment is based solely on the listed hardware.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 4,
+          "total": 19
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "B",
+        "reason": "Both correctly select the iPhone 15 Pro using the provided specifications. Answer B is slightly better because it stays focused and explicitly notes that no benchmark data is available."
+      }
+    },
+    {
+      "id": 14,
+      "query": "Which one has the best camera?",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        199,
+        405,
+        59,
+        155,
+        259
+      ],
+      "prompt_a_answer": "Based on the listed camera specifications, the **Google Pixel 8 Pro (Product ID: 155)** and **Xiaomi 14 Civi (Product ID: 405)** are tied for the best camera:\n\n- **1-inch 50MP Sony LYT-900 primary sensor**\n- **Stepless variable aperture (f/1.63–f/4.0)**\n- **Leica co-engineering**\n\nThe available information doesn’t distinguish their camera performance. However, the **Xiaomi 14 Civi costs ₹47,999**, versus **₹113,999** for the Pixel 8 Pro, making it the stronger camera-value choice.",
+      "prompt_b_answer": "Based on the listed camera specifications, **Xiaomi 14 Civi (Product ID: 405)** and **Google Pixel 8 Pro (Product ID: 155)** tie for the best camera:\n\n- 1-inch 50MP Sony LYT-900 primary sensor\n- Stepless variable aperture (f/1.63–f/4.0)\n- Leica co-engineering\n\nThe available information doesn’t provide enough camera details to choose a definitive winner between them. For value, the **Xiaomi 14 Civi at ₹47,999** offers the same listed camera setup as the ₹1,13,999 Pixel 8 Pro.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "Tie",
+        "reason": "Both answers directly address the question, accurately identify the two phones with the strongest identical listed camera specifications, acknowledge that the context cannot distinguish a definitive winner, and provide a grounded value comparison."
+      }
+    },
+    {
+      "id": 15,
+      "query": "Which one has the best battery?",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        122,
+        52,
+        85,
+        465,
+        112
+      ],
+      "prompt_a_answer": "Based on battery capacity and charging specs, these two tie for the best battery:\n\n- **Honor 200 Pro 5G (Product ID: 85)** — 5000mAh battery, 120W FlashCharge; claimed 0–100% in about 27 minutes.\n- **Nothing Phone (2a) (Product ID: 465)** — 5000mAh battery with the same listed 120W charging claim.\n\nThe other listed phones have smaller **4422mAh** batteries with **15W wireless charging**. Actual battery life is not specified.",
+      "prompt_b_answer": "The **Honor 200 Pro 5G (Product ID 85)** and **Nothing Phone (2a) (Product ID 465)** tie for the best battery:\n\n- **5,000mAh battery**\n- **120W FlashCharge**\n- Claimed **0–100% in about 27 minutes**\n\nThe other phones have smaller **4,422mAh batteries with 15W wireless charging**.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 4,
+          "total": 19
+        },
+        "winner": "A",
+        "reason": "Both answers correctly identify the two models tied at 5,000mAh with 120W charging. Answer A is slightly better because it clarifies that actual battery life is not provided, avoiding equating specifications with real-world endurance."
+      }
+    },
+    {
+      "id": 16,
+      "query": "Which one should I buy?",
+      "type": "comparison",
+      "retrieved_product_ids": [
+        1,
+        325,
+        2,
+        125,
+        3
+      ],
+      "prompt_a_answer": "**My pick: POCO X6 Pro 5G (Product ID: 125)** for the best value.\n\n- **₹26,999**\n- Snapdragon 8s Gen 3, 16GB LPDDR5X RAM, and 512GB UFS 4.0 storage\n- 6.78-inch 1.5K 144Hz LTPO AMOLED display\n- 5000mAh battery with 120W charging\n- Main drawback: its **4.0 rating** is lower than the OnePlus Nord 4 5G’s 4.6 rating\n\nOther good choices:\n\n- **Best premium option:** Samsung Galaxy S24 Ultra (Product ID: 1) — ₹129,999, rating 4.7, highly versatile cameras and 5x optical zoom.\n- **Higher-rated mid-range option:** OnePlus Nord 4 5G (Product ID: 325) — ₹29,999, rating 4.6, excellent display and 120W charging.\n\nUnless you specifically want a premium Samsung or prioritize customer rating, the **POCO X6 Pro 5G offers the strongest specifications for the price** among these choices.",
+      "prompt_b_answer": "**Best value: POCO X6 Pro 5G (Product ID 125) — ₹26,999.**\n\nWhy:\n- Snapdragon 8s Gen 3 processor\n- 16GB LPDDR5X RAM and 512GB UFS 4.0 storage\n- 144Hz LTPO AMOLED display\n- 5000mAh battery with 120W charging\n- ₹3,000 cheaper than the OnePlus Nord 4 5G\n\nIts rating is lower at **4.0**. If ratings matter more, choose the **OnePlus Nord 4 5G (Product ID 325)** at ₹29,999 with a **4.6 rating**. For the strongest premium camera versatility and highest rating, choose the **Samsung Galaxy S24 Ultra (Product ID 1)**, but it costs ₹129,999.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "A",
+        "reason": "Both answers are direct, well-grounded, and useful. Answer A wins narrowly because it provides slightly clearer purchase guidance and organizes the alternatives by use case."
+      }
+    },
+    {
+      "id": 17,
+      "query": "Which one is best?",
+      "type": "follow_up",
+      "retrieved_product_ids": [
+        420,
+        128,
+        30,
+        28,
+        273
+      ],
+      "prompt_a_answer": "### Best overall: **Samsung Galaxy A55 5G (Product ID: 28)** — ₹42,999\n\n- Highest rating: **4.9**\n- Snapdragon 7 Gen 3 processor\n- **12GB RAM + 512GB storage**\n- 6.6-inch FHD+ 120Hz Super AMOLED display\n- 50MP main camera with OIS and 64MP telephoto with 3x optical zoom\n- 5,500mAh battery with 100W charging\n\n**Alternative:** Choose the **Samsung Galaxy A55 5G (Product ID: 420)** at ₹45,999 if you prioritize **16GB RAM, 1TB storage, a 200MP main camera, and IP68 protection**, though it has slower 33W charging and a slightly lower 4.7 rating.",
+      "prompt_b_answer": "**Best overall: Samsung Galaxy A55 5G (Product ID: 28)** — **₹42,999**\n\nWhy:\n- Highest rating: **4.9**\n- **Snapdragon 7 Gen 3**\n- **12GB RAM + 512GB storage**\n- 6.6-inch **120Hz Super AMOLED** display\n- Versatile cameras with **3x optical zoom**\n- Large **5500mAh battery** with **100W charging**\n- Well within your ₹80,000 budget\n\nIf you prioritize **1TB storage and 16GB RAM**, consider the Galaxy A55 5G (Product ID: 420), but Product 28 offers the best overall balance.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 4,
+          "constraint_adherence": 4,
+          "answer_quality": 4,
+          "total": 17
+        },
+        "winner": "A",
+        "reason": "Both answers make a clear, well-supported recommendation, but Answer A is fully grounded in the provided context. Answer B invents an ₹80,000 budget that the user never specified."
+      }
+    },
+    {
+      "id": 18,
+      "query": "Which one is cheaper?",
+      "type": "follow_up",
+      "retrieved_product_ids": [
+        420,
+        128,
+        30,
+        28,
+        273
+      ],
+      "prompt_a_answer": "The cheapest is the **Samsung Galaxy M55 5G (Product ID: 128)** in **Starlight Silver**, priced at **₹26,999**.",
+      "prompt_b_answer": "The cheapest is the **Samsung Galaxy M55 5G (Product ID: 128)** in **Starlight Silver**, priced at **₹26,999**.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "winner": "Tie",
+        "reason": "Both answers are identical, directly answer the question, and correctly identify Product 128 as the cheapest at ₹26,999."
+      }
+    },
+    {
+      "id": 19,
+      "query": "Tell me more about the first product",
+      "type": "follow_up",
+      "retrieved_product_ids": [
+        420,
+        128,
+        30,
+        28,
+        273
+      ],
+      "prompt_a_answer": "### Samsung Galaxy A55 5G (Product ID: 420)\n\n- **Price:** ₹45,999\n- **Rating:** 4.7/5\n- **Colour:** Peach Fuzz\n- **Processor:** Exynos 1480 (4nm)\n- **Memory:** 16GB LPDDR5X RAM\n- **Storage:** 1TB UFS 4.0\n- **Display:** 6.67-inch 1.5K curved AMOLED, 120Hz refresh rate, up to 1,800 nits brightness\n- **Durability:** IP68 protection\n- **Rear cameras:**\n  - 200MP main camera with OIS\n  - 4x in-sensor lossless zoom\n  - 8MP ultrawide\n  - 2MP macro\n- **Battery:** 5,000mAh\n- **Charging:** 33W fast charging and 5W reverse wired charging\n- **Software:** Latest OS release, with enterprise-grade security updates\n- **Other:** Optimized thermal management\n\nIt is well below your ₹80,000 budget and stands out for its large RAM and storage capacity, high-resolution main camera, curved 120Hz AMOLED display, and IP68 protection.",
+      "prompt_b_answer": "The first product is the **Samsung Galaxy A55 5G (Product ID: 420)** in **Peach Fuzz**.\n\n- **Price:** ₹45,999\n- **Rating:** 4.7/5\n- **Processor:** Exynos 1480 (4nm)\n- **Memory:** 16GB LPDDR5X RAM\n- **Storage:** 1TB UFS 4.0\n- **Display:** 6.67-inch 1.5K curved AMOLED, 120Hz, up to 1,800 nits\n- **Durability:** IP68 protection\n- **Rear cameras:** 200MP main camera with OIS and 4x in-sensor lossless zoom, 8MP ultrawide, and 2MP macro\n- **Battery:** 5,000mAh\n- **Charging:** 33W fast charging and 5W reverse wired charging\n- **Software:** Latest OS release with enterprise-grade security updates\n- **Other feature:** Optimized thermal management\n\nIt is well under your ₹80,000 budget and offers especially strong RAM, storage, display, and camera specifications.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 4,
+          "constraint_adherence": 4,
+          "answer_quality": 4,
+          "total": 17
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 4,
+          "constraint_adherence": 4,
+          "answer_quality": 4,
+          "total": 17
+        },
+        "winner": "B",
+        "reason": "Both accurately summarize the first product but invent a ₹80,000 user budget that was not provided. Answer B is marginally more concise while retaining the same useful details."
+      }
+    },
+    {
+      "id": 20,
+      "query": "What about the second one?",
+      "type": "follow_up",
+      "retrieved_product_ids": [
+        420,
+        128,
+        30,
+        28,
+        273
+      ],
+      "prompt_a_answer": "The second one is the **Samsung Galaxy M55 5G (Product ID: 128)** in **Starlight Silver**.\n\n- **Price:** ₹26,999\n- **Rating:** 3.9/5\n- **Processor:** MediaTek Dimensity 7050\n- **Storage:** 256GB UFS 4.0\n- **Display:** 6.6-inch FHD+ 120Hz Super AMOLED\n- **Cameras:** 50MP main with OIS, 50MP ultrawide, and 64MP periscope telephoto with 3x optical zoom\n- **Battery:** 5,500mAh with 100W charging\n- **Security:** Knox Vault\n\nIt looks like a strong budget option for battery life, fast charging, and camera versatility. However, its **3.9 rating** is lower than some of the Galaxy A55 options in the catalog.",
+      "prompt_b_answer": "The **second one is the Samsung Galaxy M55 5G (Product ID: 128)**.\n\n- **Price:** ₹26,999\n- **Colour:** Starlight Silver\n- **Rating:** 3.9/5\n- **Processor:** MediaTek Dimensity 7050\n- **Storage:** 256GB UFS 4.0\n- **Display:** 6.6-inch FHD+ 120Hz Super AMOLED\n- **Cameras:** 50MP main with OIS, 50MP ultrawide/macro, 64MP telephoto with 3× optical zoom\n- **Battery:** 5,500mAh with 100W charging\n- **Security:** Knox Vault\n\nIt is well within your ₹80,000 budget and offers strong battery, charging, and camera specifications. The available information doesn’t specify its exact RAM capacity.",
+      "judge": {
+        "answer_a": {
+          "relevance": 5,
+          "groundedness": 5,
+          "constraint_adherence": 5,
+          "answer_quality": 5,
+          "total": 20
+        },
+        "answer_b": {
+          "relevance": 5,
+          "groundedness": 4,
+          "constraint_adherence": 4,
+          "answer_quality": 4,
+          "total": 17
+        },
+        "winner": "A",
+        "reason": "Both correctly identify and summarize the second product, but Answer B invents an ₹80,000 budget that is not provided. Answer A remains fully grounded and directly useful."
+      }
+    }
+  ]
+}

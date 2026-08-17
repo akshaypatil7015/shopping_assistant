@@ -1,0 +1,208 @@
+[
+  {
+    "id": 1,
+    "query": "Suggest me a Samsung smartphone under 80000",
+    "type": "recommendation"
+  },
+  {
+    "id": 2,
+    "query": "Suggest me an iPhone under 100000",
+    "type": "recommendation"
+  },
+  {
+    "id": 3,
+    "query": "Suggest me a smartphone under 30000",
+    "type": "recommendation"
+  },
+  {
+    "id": 4,
+    "query": "Suggest me a Samsung smartphone between 30000 and 80000",
+    "type": "recommendation"
+  },
+  {
+    "id": 5,
+    "query": "What is the best smartphone available under 50000?",
+    "type": "recommendation"
+  },
+  {
+    "id": 6,
+    "query": "Suggest me a good gaming smartphone under 50000",
+    "type": "recommendation"
+  },
+  {
+    "id": 7,
+    "query": "Suggest me a smartphone with a good camera under 60000",
+    "type": "recommendation"
+  },
+  {
+    "id": 8,
+    "query": "Suggest me a smartphone with good battery life under 40000",
+    "type": "recommendation"
+  },
+
+  {
+    "id": 9,
+    "query": "Compare the Samsung smartphones you found",
+    "type": "comparison"
+  },
+  {
+    "id": 10,
+    "query": "Compare the first two products",
+    "type": "comparison"
+  },
+  {
+    "id": 11,
+    "query": "Compare the top 3 products",
+    "type": "comparison"
+  },
+  {
+    "id": 12,
+    "query": "Which of these products is the best value for money?",
+    "type": "comparison"
+  },
+  {
+    "id": 13,
+    "query": "Which product has the best performance?",
+    "type": "comparison"
+  },
+  {
+    "id": 14,
+    "query": "Which one has the best camera?",
+    "type": "comparison"
+  },
+  {
+    "id": 15,
+    "query": "Which one has the best battery?",
+    "type": "comparison"
+  },
+  {
+    "id": 16,
+    "query": "Which one should I buy?",
+    "type": "comparison"
+  },
+
+  {
+    "id": 17,
+    "query": "Which one is best?",
+    "type": "follow_up"
+  },
+  {
+    "id": 18,
+    "query": "Which one is cheaper?",
+    "type": "follow_up"
+  },
+  {
+    "id": 19,
+    "query": "Tell me more about the first product",
+    "type": "follow_up"
+  },
+  {
+    "id": 20,
+    "query": "What about the second one?",
+    "type": "follow_up"
+  },
+  {
+    "id": 21,
+    "query": "Tell me the processor, RAM, storage and battery of the first product",
+    "type": "follow_up"
+  },
+  {
+    "id": 22,
+    "query": "Does the first product support wireless charging?",
+    "type": "follow_up"
+  },
+  {
+    "id": 23,
+    "query": "Is the second one better for gaming?",
+    "type": "follow_up"
+  },
+  {
+    "id": 24,
+    "query": "Compare the first two and suggest the better one",
+    "type": "follow_up"
+  },
+
+  {
+    "id": 25,
+    "query": "Show me something cheaper",
+    "type": "constraint_follow_up"
+  },
+  {
+    "id": 26,
+    "query": "Show me another option under 40000",
+    "type": "constraint_follow_up"
+  },
+  {
+    "id": 27,
+    "query": "Find another Samsung phone below 50000",
+    "type": "constraint_follow_up"
+  },
+  {
+    "id": 28,
+    "query": "Show me a cheaper gaming option",
+    "type": "constraint_follow_up"
+  },
+  {
+    "id": 29,
+    "query": "What about something below 30000?",
+    "type": "constraint_follow_up"
+  },
+  {
+    "id": 30,
+    "query": "Find another one with a better battery",
+    "type": "constraint_follow_up"
+  },
+
+  {
+    "id": 31,
+    "query": "What processor does this phone have?",
+    "type": "product_details"
+  },
+  {
+    "id": 32,
+    "query": "How much RAM does this phone have?",
+    "type": "product_details"
+  },
+  {
+    "id": 33,
+    "query": "How much storage does this phone have?",
+    "type": "product_details"
+  },
+  {
+    "id": 34,
+    "query": "What is the battery capacity of this phone?",
+    "type": "product_details"
+  },
+  {
+    "id": 35,
+    "query": "What is the display refresh rate?",
+    "type": "product_details"
+  },
+
+  {
+    "id": 36,
+    "query": "Does this product support wireless charging?",
+    "type": "groundedness"
+  },
+  {
+    "id": 37,
+    "query": "Does this phone have an IP68 rating?",
+    "type": "groundedness"
+  },
+  {
+    "id": 38,
+    "query": "What is the camera zoom capability of this phone?",
+    "type": "groundedness"
+  },
+
+  {
+    "id": 39,
+    "query": "Suggest me a laptop under 80000",
+    "type": "out_of_domain"
+  },
+  {
+    "id": 40,
+    "query": "Suggest me a good smartwatch for fitness",
+    "type": "out_of_domain"
+  }
+]
