@@ -5,6 +5,13 @@ import numpy as np
 from database import DB_PATH
 from embeddings import create_embedding
 
+from sentence_transformers import CrossEncoder
+
+
+# Cross-encoder re-ranker
+RERANKER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+
+reranker = CrossEncoder(RERANKER_MODEL)
 
 # ============================================================
 # 1. COSINE SIMILARITY
@@ -783,6 +790,60 @@ def load_products():
     return products
 
 
+
+def rerank_products(query, products, top_k=5):
+    """
+    Re-rank products returned by hybrid search using a cross-encoder.
+
+    Args:
+        query: Original user query.
+        products: Candidate products returned by RRF.
+        top_k: Number of final products to return.
+
+    Returns:
+        Re-ranked top-k products.
+    """
+
+    if not products:
+        return []
+
+    # Create query-product pairs for the cross-encoder
+    pairs = []
+
+    for product in products:
+        product_text = " ".join(
+            str(product.get(field, ""))
+            for field in [
+                "brand",
+                "model",
+                "category",
+                "colour",
+                "product description",
+            ]
+        )
+
+        pairs.append([query, product_text])
+
+    # Calculate relevance scores
+    scores = reranker.predict(pairs)
+
+    # Attach scores to products
+    scored_products = []
+
+    for product, score in zip(products, scores):
+        product_copy = product.copy()
+        product_copy["rerank_score"] = float(score)
+        scored_products.append(product_copy)
+
+    # Highest relevance score first
+    scored_products.sort(
+        key=lambda x: x["rerank_score"],
+        reverse=True
+    )
+
+    return scored_products[:top_k]
+
+
 # ============================================================
 # 15. HYBRID SEARCH
 # ============================================================
@@ -896,9 +957,19 @@ def search_products(
     # --------------------------------------------------------
 
     hybrid_results = reciprocal_rank_fusion(
-        keyword_results=keyword_results,
-        vector_results=vector_results,
+    keyword_results=keyword_results,
+    vector_results=vector_results,
+    top_k=20
+)
+
+# --------------------------------------------------------
+# Cross-Encoder Re-ranking
+# --------------------------------------------------------
+
+    reranked_results = rerank_products(
+        query=query,
+        products=hybrid_results,
         top_k=top_k
     )
 
-    return hybrid_results
+    return reranked_results

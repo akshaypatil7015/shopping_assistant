@@ -28,8 +28,123 @@ if not OPENAI_API_KEY:
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-MODEL = "gpt-5.6"
+MODEL = "gpt-5.4-mini"
 
+
+# ============================================================
+# TOKEN USAGE & COST TRACKING
+# ============================================================
+
+INPUT_COST_PER_MILLION = 0.75
+OUTPUT_COST_PER_MILLION = 4.5
+
+total_input_tokens = 0
+total_output_tokens = 0
+total_tokens = 0
+total_cost = 0.0
+llm_call_count = 0
+
+
+def calculate_cost(input_tokens, output_tokens):
+    """
+    Calculate OpenAI API cost in USD.
+    """
+
+    input_cost = (
+        input_tokens / 1_000_000
+    ) * INPUT_COST_PER_MILLION
+
+    output_cost = (
+        output_tokens / 1_000_000
+    ) * OUTPUT_COST_PER_MILLION
+
+    total_cost = input_cost + output_cost
+
+    return input_cost, output_cost, total_cost
+
+
+def track_usage(response):
+    """
+    Extract token usage from the OpenAI response
+    and update cumulative usage statistics.
+    """
+
+    global total_input_tokens
+    global total_output_tokens
+    global total_tokens
+    global total_cost
+    global llm_call_count
+
+    usage = response.usage
+
+    input_tokens = usage.input_tokens
+    output_tokens = usage.output_tokens
+    request_total_tokens = usage.total_tokens
+
+    input_cost, output_cost, request_cost = calculate_cost(
+        input_tokens,
+        output_tokens
+    )
+
+    # Update cumulative totals
+    total_input_tokens += input_tokens
+    total_output_tokens += output_tokens
+    total_tokens += request_total_tokens
+    total_cost += request_cost
+    llm_call_count += 1
+
+    # Display usage for this request
+    print("\n" + "-" * 60)
+    print("LLM TOKEN USAGE")
+    print("-" * 60)
+
+    print(f"Input tokens:   {input_tokens:,}")
+    print(f"Output tokens:  {output_tokens:,}")
+    print(f"Total tokens:   {request_total_tokens:,}")
+
+    print("\nLLM COST")
+    print("-" * 60)
+
+    print(f"Input cost:     ${input_cost:.6f}")
+    print(f"Output cost:    ${output_cost:.6f}")
+    print(f"Request cost:   ${request_cost:.6f}")
+
+    print("-" * 60)
+
+    return {
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "total_tokens": request_total_tokens,
+        "input_cost": input_cost,
+        "output_cost": output_cost,
+        "total_cost": request_cost,
+    }
+
+
+def print_usage_summary():
+    """
+    Display cumulative token usage and cost.
+    """
+
+    print("\n")
+    print("=" * 60)
+    print("LLM USAGE & COST SUMMARY")
+    print("=" * 60)
+
+    print(f"LLM calls:       {llm_call_count:,}")
+    print(f"Input tokens:    {total_input_tokens:,}")
+    print(f"Output tokens:   {total_output_tokens:,}")
+    print(f"Total tokens:    {total_tokens:,}")
+
+    print("-" * 60)
+
+    print(f"Total cost:      ${total_cost:.6f}")
+
+    if llm_call_count > 0:
+        average_cost = total_cost / llm_call_count
+        print(f"Average/request: ${average_cost:.6f}")
+
+    print("=" * 60)
 
 # ============================================================
 # 3. CONVERSATION STATE
@@ -606,6 +721,8 @@ def generate_answer(user_query, top_k=5):
         input=prompt
     )
 
+        # Track token usage and cost
+    track_usage(response)
 
     # ========================================================
     # STEP 9: GET ANSWER
@@ -702,6 +819,8 @@ def main():
         # ----------------------------------------------------
 
         if user_query.lower() in {"exit", "quit"}:
+
+            print_usage_summary()
 
             print("\nGoodbye!")
             break
