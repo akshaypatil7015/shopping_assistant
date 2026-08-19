@@ -11,6 +11,7 @@ from rag import build_context
 import conversation
 import monitoring
 
+
 # ============================================================
 # LOAD ENVIRONMENT VARIABLES
 # ============================================================
@@ -150,9 +151,11 @@ def print_usage_summary():
 
     print("=" * 60)
 
+
 # ============================================================
-# retrieve_products
+# RETRIEVE PRODUCTS
 # ============================================================
+
 def retrieve_products(user_query, top_k=5):
     """
     Retrieve products using hybrid search
@@ -176,96 +179,200 @@ def retrieve_products(user_query, top_k=5):
 # ============================================================
 
 def generate_answer(user_query, top_k=5):
-    """
-    Complete conversational RAG pipeline.
 
-    Handles:
-
-    1. New product searches
-    2. Follow-up questions about previous products
-    3. New searches that preserve previous constraints
-    """
     request_start_time = time.perf_counter()
 
-    # ========================================================
-    # STEP 1: DETECT QUERY TYPE
-    # ========================================================
+    search_latency = None
+    llm_latency = None
+    current_search_query = user_query
 
-    follow_up = (
-    bool(conversation.last_retrieved_products)
-    and conversation.is_follow_up_question(user_query)
-    )
+    try:
 
-    constraint_query = (
-        bool(conversation.last_retrieved_products)
-        and conversation.is_new_constraint_query(user_query)
-    )
+        # ====================================================
+        # STEP 1: DETECT QUERY TYPE
+        # ====================================================
 
-
-    # ========================================================
-    # STEP 2: FOLLOW-UP ABOUT PREVIOUS PRODUCTS
-    # ========================================================
-
-    if follow_up:
-
-        print("\nUsing previous retrieved products.")
-
-        products = conversation.last_retrieved_products
-
-        current_search_query = conversation.last_search_query
-
-        search_latency = 0.0
-
-
-    # ========================================================
-    # STEP 3: NEW SEARCH USING PREVIOUS CONSTRAINTS
-    # ========================================================
-
-    elif constraint_query:
-
-        print(
-            "\nPerforming new search "
-            "with previous constraints."
+        follow_up = (
+            bool(conversation.last_retrieved_products)
+            and conversation.is_follow_up_question(user_query)
         )
 
-        current_search_query = conversation.build_constraint_query(
-            user_query
+        constraint_query = (
+            bool(conversation.last_retrieved_products)
+            and conversation.is_new_constraint_query(user_query)
         )
 
-        print(
-            "Expanded search query:",
-            current_search_query
-        )
+        # ====================================================
+        # STEP 2: FOLLOW-UP
+        # ====================================================
 
-        products, search_latency = retrieve_products(
-            user_query=current_search_query,
-            top_k=top_k
-        )
+        if follow_up:
 
+            print("\nUsing previous retrieved products.")
 
-    # ========================================================
-    # STEP 4: COMPLETELY NEW SEARCH
-    # ========================================================
+            products = conversation.last_retrieved_products
 
-    else:
+            current_search_query = conversation.last_search_query
 
-        print("\nPerforming new product search.")
+            search_latency = 0.0
 
-        products, search_latency = retrieve_products(
+        # ====================================================
+        # STEP 3: CONSTRAINT SEARCH
+        # ====================================================
+
+        elif constraint_query:
+
+            print(
+                "\nPerforming new search "
+                "with previous constraints."
+            )
+
+            current_search_query = (
+                conversation.build_constraint_query(user_query)
+            )
+
+            print(
+                "Expanded search query:",
+                current_search_query
+            )
+
+            products, search_latency = retrieve_products(
+                user_query=current_search_query,
+                top_k=top_k
+            )
+
+        # ====================================================
+        # STEP 4: NEW SEARCH
+        # ====================================================
+
+        else:
+
+            print("\nPerforming new product search.")
+
+            products, search_latency = retrieve_products(
+                user_query=user_query,
+                top_k=top_k
+            )
+
+            current_search_query = user_query
+
+        # ====================================================
+        # STEP 5: NO RESULTS
+        # ====================================================
+
+        if not products:
+
+            answer = "I couldn't find any relevant products."
+
+            total_latency = (
+                time.perf_counter() - request_start_time
+            )
+
+            monitoring.log_request(
+                user_query=user_query,
+                search_query=current_search_query,
+                filters=None,
+                retrieved_product_ids=[],
+                num_results=0,
+                search_latency=search_latency,
+                llm_latency=None,
+                total_latency=total_latency,
+                model=MODEL,
+                input_tokens=None,
+                output_tokens=None,
+                total_tokens=None,
+                llm_cost=None,
+                response=answer,
+                error=None,
+            )
+
+            conversation.conversation_history.append(
+                f"User: {user_query}"
+            )
+
+            conversation.conversation_history.append(
+                f"Assistant: {answer}"
+            )
+
+            return answer
+
+        # ====================================================
+        # STEP 6: BUILD RAG CONTEXT
+        # ====================================================
+
+        retrieved_chunks = build_context(products)
+
+        # ====================================================
+        # STEP 7: BUILD PROMPT
+        # ====================================================
+
+        prompt = build_prompt(
             user_query=user_query,
-            top_k=top_k
+            retrieved_chunks=retrieved_chunks,
+            conversation_history=conversation.conversation_history,
+            previous_user_query=conversation.last_user_query,
+            is_follow_up=follow_up
         )
 
-        current_search_query = user_query
+        # ====================================================
+        # STEP 8: CALL LLM
+        # ====================================================
 
+        llm_start_time = time.perf_counter()
 
-    # ========================================================
-    # STEP 5: HANDLE NO RESULTS
-    # ========================================================
+        response = client.responses.create(
+            model=MODEL,
+            input=prompt
+        )
 
-    if not products:
+        llm_latency = (
+            time.perf_counter() - llm_start_time
+        )
 
-        answer = "I couldn't find any relevant products."
+        # Track token usage and cost
+        usage_info = track_usage(response)
+
+        # ====================================================
+        # STEP 9: GET ANSWER
+        # ====================================================
+
+        answer = response.output_text
+
+        total_latency = (
+            time.perf_counter() - request_start_time
+        )
+
+        # ====================================================
+        # STEP 10: LOG SUCCESSFUL REQUEST
+        # ====================================================
+
+        monitoring.log_request(
+            user_query=user_query,
+            search_query=current_search_query,
+            filters=None,
+            retrieved_product_ids=[
+                product.get("id")
+                for product in products
+            ],
+            num_results=len(products),
+            search_latency=search_latency,
+            llm_latency=llm_latency,
+            total_latency=total_latency,
+            model=MODEL,
+
+            # Token usage and cost
+            input_tokens=usage_info["input_tokens"],
+            output_tokens=usage_info["output_tokens"],
+            total_tokens=usage_info["total_tokens"],
+            llm_cost=usage_info["total_cost"],
+
+            response=answer,
+            error=None,
+        )
+
+        # ====================================================
+        # STEP 11: SAVE CONVERSATION
+        # ====================================================
 
         conversation.conversation_history.append(
             f"User: {user_query}"
@@ -275,122 +382,59 @@ def generate_answer(user_query, top_k=5):
             f"Assistant: {answer}"
         )
 
+        # ====================================================
+        # STEP 12: UPDATE SEARCH STATE
+        # ====================================================
+
+        if not follow_up:
+
+            conversation.last_retrieved_products = products
+
+            conversation.last_user_query = user_query
+
+            conversation.last_search_query = (
+                current_search_query
+            )
+
         return answer
 
-
     # ========================================================
-    # STEP 6: BUILD RAG CONTEXT
-    # ========================================================
-
-    retrieved_chunks = build_context(
-        products
-    )
-
-
-    # ========================================================
-    # STEP 7: BUILD PROMPT
+    # ERROR HANDLING + MONITORING
     # ========================================================
 
-    prompt = build_prompt(
-    user_query=user_query,
-    retrieved_chunks=retrieved_chunks,
-    conversation_history=conversation.conversation_history,
-    previous_user_query=conversation.last_user_query,
-    is_follow_up=follow_up
-)
+    except Exception as e:
 
+        total_latency = (
+            time.perf_counter() - request_start_time
+        )
 
-    # ========================================================
-    # STEP 8: CALL OPENAI
-    # ========================================================
+        monitoring.log_request(
+            user_query=user_query,
+            search_query=current_search_query,
+            filters=None,
+            retrieved_product_ids=[],
+            num_results=0,
+            search_latency=search_latency,
+            llm_latency=llm_latency,
+            total_latency=total_latency,
+            model=MODEL,
 
-    llm_start_time = time.perf_counter()
+            # No token information may be available
+            # if the request failed before usage was returned.
+            input_tokens=None,
+            output_tokens=None,
+            total_tokens=None,
+            llm_cost=None,
 
-    response = client.responses.create(
-        model=MODEL,
-        input=prompt
-    )
+            response=None,
+            error=str(e),
+        )
 
-    llm_latency = time.perf_counter() - llm_start_time
-    # Track token usage and cost
-    usage_data = track_usage(response)
-
-    # ========================================================
-    # STEP 9: GET ANSWER
-    # ========================================================
-
-    answer = response.output_text
-    total_latency = time.perf_counter() - request_start_time
-
-    # ============================================================
-    # DETERMINE QUERY TYPE
-    # ============================================================
-
-    if follow_up:
-        query_type = "follow_up"
-
-    elif constraint_query:
-        query_type = "constraint_search"
-
-    else:
-        query_type = "new_search"
-
-
-    monitoring.log_request(
-        user_query=user_query,
-        search_query=current_search_query,
-        query_type=query_type,
-        filters=None,
-        retrieved_product_ids=[
-            product.get("id")
-            for product in products
-        ],
-        num_results=len(products),
-        search_latency=search_latency,
-        llm_latency=llm_latency,
-        total_latency=total_latency,
-        model=MODEL,
-        input_tokens=usage_data["input_tokens"],
-        output_tokens=usage_data["output_tokens"],
-        total_tokens=usage_data["total_tokens"],
-        llm_cost=usage_data["total_cost"],
-        response=answer,
-        error=None,
-    )
-
-    # ========================================================
-    # STEP 10: SAVE CONVERSATION
-    # ========================================================
-
-    conversation.conversation_history.append(
-        f"User: {user_query}"
-    )
-
-    conversation.conversation_history.append(
-        f"Assistant: {answer}"
-    )
-
-
-    # ========================================================
-    # STEP 11: UPDATE SEARCH STATE
-    # ========================================================
-
-    # For a NEW SEARCH or CONSTRAINT SEARCH,
-    # replace the current recommendation set.
-
-    if not follow_up:
-
-        conversation.last_retrieved_products = products
-
-        conversation.last_user_query = user_query
-
-        conversation.last_search_query = current_search_query
-
-    return answer
+        raise
 
 
 # ============================================================
-# 8. DISPLAY RETRIEVED PRODUCTS
+# DISPLAY RETRIEVED PRODUCTS
 # ============================================================
 
 def display_retrieved_products(products):
@@ -414,7 +458,7 @@ def display_retrieved_products(products):
 
 
 # ============================================================
-# 9. MAIN APPLICATION
+# MAIN APPLICATION
 # ============================================================
 
 def main():
@@ -431,14 +475,12 @@ def main():
 
         user_query = input("\nYou: ").strip()
 
-
         # ----------------------------------------------------
         # Ignore empty input
         # ----------------------------------------------------
 
         if not user_query:
             continue
-
 
         # ----------------------------------------------------
         # Exit
@@ -451,18 +493,17 @@ def main():
             print("\nGoodbye!")
             break
 
-
         # ----------------------------------------------------
         # Clear conversation
         # ----------------------------------------------------
 
         if user_query.lower() == "clear":
+
             conversation.clear_conversation()
 
             print("\nConversation history cleared.")
 
             continue
-
 
         # ----------------------------------------------------
         # Generate answer
@@ -484,7 +525,7 @@ def main():
 
 
 # ============================================================
-# 10. RUN APPLICATION
+# RUN APPLICATION
 # ============================================================
 
 if __name__ == "__main__":

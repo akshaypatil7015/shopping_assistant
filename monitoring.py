@@ -42,7 +42,8 @@ def init_monitoring_db():
             total_tokens INTEGER,
             llm_cost REAL,
             response TEXT,
-            error TEXT
+            error TEXT,
+            feedback TEXT
         )
         """
     )
@@ -64,6 +65,7 @@ def init_monitoring_db():
         "output_tokens": "INTEGER",
         "total_tokens": "INTEGER",
         "llm_cost": "REAL",
+        "feedback": "TEXT",
     }
 
     for column_name, column_type in new_columns.items():
@@ -88,7 +90,6 @@ def init_monitoring_db():
 def log_request(
     user_query,
     search_query=None,
-    query_type=None,
     filters=None,
     retrieved_product_ids=None,
     num_results=0,
@@ -96,20 +97,24 @@ def log_request(
     llm_latency=None,
     total_latency=None,
     model=None,
+    response=None,
+    error=None,
+    query_type=None,
     input_tokens=None,
     output_tokens=None,
     total_tokens=None,
     llm_cost=None,
-    response=None,
-    error=None,
 ):
     """
     Store one assistant request in the monitoring database.
+
+    Returns:
+        int: ID of the newly created monitoring request.
     """
 
     conn = sqlite3.connect(DB_PATH)
 
-    conn.execute(
+    cursor = conn.execute(
         """
         INSERT INTO requests (
             timestamp,
@@ -128,16 +133,19 @@ def log_request(
             total_tokens,
             llm_cost,
             response,
-            error
+            error,
+            feedback
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             datetime.now(timezone.utc).isoformat(),
             user_query,
             search_query,
             query_type,
-            json.dumps(filters) if filters is not None else None,
+            json.dumps(filters)
+            if filters is not None
+            else None,
             json.dumps(retrieved_product_ids)
             if retrieved_product_ids is not None
             else None,
@@ -152,6 +160,47 @@ def log_request(
             llm_cost,
             response,
             error,
+            None,
+        ),
+    )
+
+    request_id = cursor.lastrowid
+
+    conn.commit()
+    conn.close()
+
+    return request_id
+
+
+# ============================================================
+# SAVE USER FEEDBACK
+# ============================================================
+
+def save_feedback(request_id, feedback):
+    """
+    Save user feedback for a monitored request.
+
+    Expected feedback values:
+        "positive"
+        "negative"
+    """
+
+    if feedback not in {"positive", "negative"}:
+        raise ValueError(
+            "Feedback must be 'positive' or 'negative'."
+        )
+
+    conn = sqlite3.connect(DB_PATH)
+
+    conn.execute(
+        """
+        UPDATE requests
+        SET feedback = ?
+        WHERE id = ?
+        """,
+        (
+            feedback,
+            request_id,
         ),
     )
 
@@ -187,13 +236,19 @@ def get_recent_requests(limit=20):
 
 
 # ============================================================
+# INITIALIZE DATABASE
+# ============================================================
+
+init_monitoring_db()
+
+
+# ============================================================
 # MAIN
 # ============================================================
 
 if __name__ == "__main__":
 
-    init_monitoring_db()
-
     print(
         f"Monitoring database initialized: {DB_PATH}"
     )
+

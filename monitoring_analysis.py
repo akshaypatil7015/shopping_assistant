@@ -220,6 +220,62 @@ def get_query_type_stats():
 
 
 # ============================================================
+# USER FEEDBACK METRICS
+# ============================================================
+
+def get_feedback_stats():
+    """
+    Return user feedback statistics.
+    """
+
+    conn = get_connection()
+
+    row = conn.execute(
+        """
+        SELECT
+            COUNT(feedback) AS total_feedback,
+
+            SUM(
+                CASE
+                    WHEN feedback = 'positive'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS positive_feedback,
+
+            SUM(
+                CASE
+                    WHEN feedback = 'negative'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS negative_feedback
+
+        FROM requests
+        """
+    ).fetchone()
+
+    conn.close()
+
+    total_feedback = row["total_feedback"] or 0
+    positive_feedback = row["positive_feedback"] or 0
+    negative_feedback = row["negative_feedback"] or 0
+
+    if total_feedback > 0:
+        positive_rate = (
+            positive_feedback / total_feedback
+        ) * 100
+    else:
+        positive_rate = 0.0
+
+    return {
+        "total_feedback": total_feedback,
+        "positive_feedback": positive_feedback,
+        "negative_feedback": negative_feedback,
+        "positive_rate": positive_rate,
+    }
+
+# ============================================================
 # RECENT REQUESTS
 # ============================================================
 

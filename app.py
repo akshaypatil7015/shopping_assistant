@@ -1,8 +1,10 @@
 import streamlit as st
 
-from assistant import (
-    generate_answer,
-    conversation_history,
+from assistant import generate_answer
+
+from monitoring import (
+    log_request,
+    save_feedback,
 )
 
 
@@ -36,6 +38,12 @@ st.write(
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+if "current_request_id" not in st.session_state:
+    st.session_state.current_request_id = None
+
+if "feedback_given" not in st.session_state:
+    st.session_state.feedback_given = False
+
 
 # ------------------------------------------------------------
 # DISPLAY CHAT HISTORY
@@ -62,7 +70,17 @@ user_query = st.chat_input(
 
 if user_query:
 
+    # --------------------------------------------------------
+    # Reset feedback state for new response
+    # --------------------------------------------------------
+
+    st.session_state.current_request_id = None
+    st.session_state.feedback_given = False
+
+    # --------------------------------------------------------
     # Display user message
+    # --------------------------------------------------------
+
     st.session_state.messages.append(
         {
             "role": "user",
@@ -73,19 +91,36 @@ if user_query:
     with st.chat_message("user"):
         st.markdown(user_query)
 
-    # Generate response
+    # --------------------------------------------------------
+    # Generate assistant response
+    # --------------------------------------------------------
+
     with st.chat_message("assistant"):
 
-        with st.spinner("Searching products and generating recommendation..."):
+        with st.spinner(
+            "Searching products and generating recommendation..."
+        ):
 
             try:
+
+                # --------------------------------------------
+                # Generate answer
+                # --------------------------------------------
 
                 answer = generate_answer(
                     user_query=user_query,
                     top_k=5,
                 )
 
+                # --------------------------------------------
+                # Display answer
+                # --------------------------------------------
+
                 st.markdown(answer)
+
+                # --------------------------------------------
+                # Save assistant message
+                # --------------------------------------------
 
                 st.session_state.messages.append(
                     {
@@ -93,6 +128,21 @@ if user_query:
                         "content": answer,
                     }
                 )
+
+                # --------------------------------------------
+                # Log request
+                # --------------------------------------------
+
+                request_id = log_request(
+                    user_query=user_query,
+                    response=answer,
+                )
+
+                # --------------------------------------------
+                # Store request ID
+                # --------------------------------------------
+
+                st.session_state.current_request_id = request_id
 
             except Exception as e:
 
@@ -105,6 +155,82 @@ if user_query:
                         "role": "assistant",
                         "content": error_message,
                     }
+                )
+
+
+# ------------------------------------------------------------
+# USER FEEDBACK
+# ------------------------------------------------------------
+
+if (
+    st.session_state.current_request_id is not None
+    and not st.session_state.feedback_given
+):
+
+    st.divider()
+
+    st.write("### Was this recommendation helpful?")
+
+    col1, col2 = st.columns(2)
+
+    # --------------------------------------------------------
+    # POSITIVE FEEDBACK
+    # --------------------------------------------------------
+
+    with col1:
+
+        if st.button(
+            "👍 Helpful",
+            use_container_width=True,
+            key=f"positive_feedback_"
+                f"{st.session_state.current_request_id}",
+        ):
+
+            try:
+
+                save_feedback(
+                    request_id=st.session_state.current_request_id,
+                    feedback="positive",
+                )
+
+                st.session_state.feedback_given = True
+
+                st.success("Thanks for your feedback! 👍")
+
+            except Exception as e:
+
+                st.error(
+                    f"Unable to save feedback: {e}"
+                )
+
+    # --------------------------------------------------------
+    # NEGATIVE FEEDBACK
+    # --------------------------------------------------------
+
+    with col2:
+
+        if st.button(
+            "👎 Not helpful",
+            use_container_width=True,
+            key=f"negative_feedback_"
+                f"{st.session_state.current_request_id}",
+        ):
+
+            try:
+
+                save_feedback(
+                    request_id=st.session_state.current_request_id,
+                    feedback="negative",
+                )
+
+                st.session_state.feedback_given = True
+
+                st.success("Thanks for your feedback! 👎")
+
+            except Exception as e:
+
+                st.error(
+                    f"Unable to save feedback: {e}"
                 )
 
 
@@ -127,6 +253,7 @@ with st.sidebar:
         - Cross-Encoder Re-ranking
         - RAG
         - LLM
+        - User Feedback
         """
     )
 
@@ -134,9 +261,16 @@ with st.sidebar:
 
     st.subheader("Conversation")
 
-    if st.button("Clear conversation"):
+    if st.button(
+        "Clear conversation",
+        use_container_width=True,
+    ):
 
         st.session_state.messages = []
+
+        st.session_state.current_request_id = None
+
+        st.session_state.feedback_given = False
 
         conversation_history.clear()
 
