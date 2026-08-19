@@ -1,14 +1,18 @@
 import os
+import time
 
 from dotenv import load_dotenv
 from openai import OpenAI
 
 from hybrid_search import search_products
 from prompt import build_prompt
+from rag import build_context
 
+import conversation
+import monitoring
 
 # ============================================================
-# 1. LOAD ENVIRONMENT VARIABLES
+# LOAD ENVIRONMENT VARIABLES
 # ============================================================
 
 load_dotenv()
@@ -23,7 +27,7 @@ if not OPENAI_API_KEY:
 
 
 # ============================================================
-# 2. CREATE OPENAI CLIENT
+# CREATE OPENAI CLIENT
 # ============================================================
 
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -147,442 +151,28 @@ def print_usage_summary():
     print("=" * 60)
 
 # ============================================================
-# 3. CONVERSATION STATE
+# retrieve_products
 # ============================================================
-
-conversation_history = []
-
-# Store the products returned by the most recent
-# recommendation/search query.
-last_retrieved_products = []
-
-# Store the user's most recent query.
-last_user_query = None
-
-# Store the actual search query used for the most recent
-# product search.
-last_search_query = None
-
-# Store filters/constraints from the previous search.
-last_search_filters = {}
-
-
-# ============================================================
-# 4. BUILD RAG CONTEXT
-# ============================================================
-
-def build_context(products):
-    """
-    Convert retrieved products into text context
-    for the LLM.
-    """
-
-    context_parts = []
-
-    for i, product in enumerate(products, start=1):
-
-        context = f"""
-Product {i}
-------------------------------
-Product ID: {product.get("id")}
-Category: {product.get("category")}
-Brand: {product.get("brand")}
-Model: {product.get("model")}
-Colour: {product.get("colour")}
-Price: ₹{product.get("price")}
-Rating: {product.get("rating")}
-
-Description:
-{product.get("description")}
-"""
-
-        context_parts.append(context)
-
-    return "\n".join(context_parts)
-
-
-# ============================================================
-# 5. DETECT FOLLOW-UP QUESTIONS
-# ============================================================
-
-def is_follow_up_question(user_query):
-    """
-    Detect whether the current query refers to
-    products from the previous recommendation/search.
-
-    Returns:
-        True  -> use previous retrieved products
-        False -> perform a new product search
-    """
-
-    query = user_query.lower().strip()
-
-    # ========================================================
-    # 1. REFERENCES TO PREVIOUS RESULTS
-    # ========================================================
-
-    reference_patterns = [
-        "above",
-        "from above",
-        "the above",
-        "above product",
-        "above products",
-
-        "previous",
-        "previous product",
-        "previous products",
-
-        "these",
-        "these products",
-        "those",
-        "those products",
-
-        "that one",
-        "that product",
-
-        "first one",
-        "second one",
-        "third one",
-        "fourth one",
-        "fifth one",
-
-        "first product",
-        "second product",
-        "third product",
-        "fourth product",
-        "fifth product",
-
-        "first two",
-        "first three",
-    ]
-
-    # ========================================================
-    # 2. BEST / RECOMMENDATION QUESTIONS
-    # ========================================================
-
-    recommendation_patterns = [
-        "which one is best",
-        "which is best",
-        "which one should i buy",
-        "which should i buy",
-        "what should i buy",
-        "which one do you recommend",
-        "which do you recommend",
-
-        "which one is better",
-        "which is better",
-
-        "which one is cheaper",
-        "which is cheaper",
-
-        "which one is expensive",
-        "which is expensive",
-    ]
-
-    # ========================================================
-    # 3. COMPARISON QUESTIONS
-    # ========================================================
-
-    comparison_patterns = [
-        "compare",
-        "comparison",
-        "compare these",
-        "compare those",
-        "compare the",
-        "compare first",
-        "compare second",
-
-        "rank them",
-        "rank these",
-        "rank those",
-    ]
-
-    # ========================================================
-    # 4. TOP / RANKING QUESTIONS
-    # ========================================================
-
-    ranking_patterns = [
-        "top",
-        "top 5",
-        "top five",
-        "top 3",
-        "top three",
-
-        "tell me top",
-        "show me top",
-        "give me top",
-
-        "best ones",
-        "best products",
-        "best phones",
-        "best smartphones",
-    ]
-
-    # ========================================================
-    # 5. PRODUCT FEATURE FOLLOW-UPS
-    # ========================================================
-
-    feature_patterns = [
-        "which has the best camera",
-        "which one has the best camera",
-        "which has better camera",
-        "which one has better camera",
-
-        "which has the best battery",
-        "which one has the best battery",
-        "which has better battery",
-        "which one has better battery",
-
-        "which has the best performance",
-        "which one has the best performance",
-        "which has better performance",
-        "which one has better performance",
-
-        "which has the best display",
-        "which one has the best display",
-        "which has better display",
-        "which one has better display",
-    ]
-
-    # ========================================================
-    # 6. GENERAL FOLLOW-UP QUESTIONS
-    # ========================================================
-
-    general_follow_up_patterns = [
-        "tell me more",
-        "show me more",
-        "more about",
-        "what about",
-        "how about",
-        "and the second",
-        "and the first",
-        "and the third",
-    ]
-
-    # ========================================================
-    # 7. CHECK ALL PATTERNS
-    # ========================================================
-
-    all_patterns = (
-        reference_patterns
-        + recommendation_patterns
-        + comparison_patterns
-        + ranking_patterns
-        + feature_patterns
-        + general_follow_up_patterns
-    )
-
-    for pattern in all_patterns:
-
-        if pattern in query:
-            return True
-
-    return False
-
-def is_new_constraint_query(user_query):
-    """
-    Detect whether the user wants a NEW product search
-    while referring to constraints from the previous search.
-
-    Examples:
-        "show me something cheaper"
-        "show me something under 40000"
-        "find another one"
-        "show me a cheaper option"
-        "what about something below 50000"
-    """
-
-    query = user_query.lower().strip()
-
-    new_search_patterns = [
-
-        # ----------------------------------------------------
-        # Cheaper requests
-        # ----------------------------------------------------
-
-        "something cheaper",
-        "cheaper option",
-        "cheaper one",
-        "cheaper product",
-
-        "find something cheaper",
-        "find a cheaper",
-        "show me a cheaper",
-        "show me something cheaper",
-        "give me a cheaper",
-
-        "less expensive",
-        "something less expensive",
-
-        # ----------------------------------------------------
-        # Explicit price requests
-        # ----------------------------------------------------
-
-        "something under",
-        "something below",
-        "something less than",
-
-        "show me something under",
-        "show me something below",
-        "show me something less than",
-
-        "find something under",
-        "find something below",
-
-        "what about under",
-        "what about below",
-
-        # ----------------------------------------------------
-        # Another product / option
-        # ----------------------------------------------------
-
-        "another one",
-        "another option",
-        "another product",
-
-        "show me another",
-        "find another",
-        "give me another",
-    ]
-
-    for pattern in new_search_patterns:
-
-        if pattern in query:
-            return True
-
-    return False
-
-def build_constraint_query(user_query):
-    """
-    Build a new search query by combining the previous
-    search query with the user's new requirement.
-
-    Example:
-
-    Previous:
-        Samsung gaming smartphone 30000 to 80000
-
-    Current:
-        show me something cheaper
-
-    New query:
-        Samsung gaming smartphone cheaper
-    """
-
-    if not last_search_query:
-        return user_query
-
-    query = user_query.lower().strip()
-
-    previous_query = last_search_query
-
-    # --------------------------------------------------------
-    # Explicit price query
-    # --------------------------------------------------------
-
-    if any(
-        phrase in query
-        for phrase in [
-            "under",
-            "below",
-            "less than",
-            "within",
-            "maximum",
-            "max"
-        ]
-    ):
-
-        return f"{previous_query} {user_query}"
-
-
-    # --------------------------------------------------------
-    # Cheaper request
-    # --------------------------------------------------------
-
-    if "cheaper" in query or "less expensive" in query:
-
-        return f"{previous_query} cheaper"
-
-
-    # --------------------------------------------------------
-    # Another product / option
-    # --------------------------------------------------------
-
-    if any(
-        phrase in query
-        for phrase in [
-            "another one",
-            "another option",
-            "another product",
-            "show me another",
-            "find another"
-        ]
-    ):
-
-        return previous_query
-
-
-    # --------------------------------------------------------
-    # Fallback
-    # --------------------------------------------------------
-
-    return f"{previous_query} {user_query}"
-
-def extract_price_constraint(user_query):
-    """
-    Extract a maximum price from simple queries such as:
-
-        under 40000
-        below 50000
-        less than 60000
-        within 70000
-
-    Returns:
-        float or None
-    """
-
-    import re
-
-    query = user_query.lower()
-
-    patterns = [
-        r"(?:under|below|less than|maximum|max|within)\s*(?:₹|rs\.?|inr)?\s*([0-9,]+)",
-        r"(?:₹|rs\.?|inr)\s*([0-9,]+)"
-    ]
-
-    for pattern in patterns:
-
-        match = re.search(pattern, query)
-
-        if match:
-
-            price = match.group(1)
-
-            price = price.replace(",", "")
-
-            return float(price)
-
-    return None
-
-# ============================================================
-# 6. RETRIEVE PRODUCTS
-# ============================================================
-
 def retrieve_products(user_query, top_k=5):
     """
-    Retrieve products using the existing hybrid search.
+    Retrieve products using hybrid search
+    and measure search latency.
     """
+
+    start_time = time.perf_counter()
 
     products = search_products(
         query=user_query,
         top_k=top_k
     )
 
-    return products
+    search_latency = time.perf_counter() - start_time
+
+    return products, search_latency
 
 
 # ============================================================
-# 7. GENERATE ANSWER
+# GENERATE ANSWER
 # ============================================================
 
 def generate_answer(user_query, top_k=5):
@@ -595,24 +185,20 @@ def generate_answer(user_query, top_k=5):
     2. Follow-up questions about previous products
     3. New searches that preserve previous constraints
     """
-
-    global last_retrieved_products
-    global last_user_query
-    global last_search_query
-
+    request_start_time = time.perf_counter()
 
     # ========================================================
     # STEP 1: DETECT QUERY TYPE
     # ========================================================
 
     follow_up = (
-        bool(last_retrieved_products)
-        and is_follow_up_question(user_query)
+    bool(conversation.last_retrieved_products)
+    and conversation.is_follow_up_question(user_query)
     )
 
     constraint_query = (
-        bool(last_retrieved_products)
-        and is_new_constraint_query(user_query)
+        bool(conversation.last_retrieved_products)
+        and conversation.is_new_constraint_query(user_query)
     )
 
 
@@ -624,9 +210,11 @@ def generate_answer(user_query, top_k=5):
 
         print("\nUsing previous retrieved products.")
 
-        products = last_retrieved_products
+        products = conversation.last_retrieved_products
 
-        current_search_query = last_search_query
+        current_search_query = conversation.last_search_query
+
+        search_latency = 0.0
 
 
     # ========================================================
@@ -640,7 +228,7 @@ def generate_answer(user_query, top_k=5):
             "with previous constraints."
         )
 
-        current_search_query = build_constraint_query(
+        current_search_query = conversation.build_constraint_query(
             user_query
         )
 
@@ -649,7 +237,7 @@ def generate_answer(user_query, top_k=5):
             current_search_query
         )
 
-        products = retrieve_products(
+        products, search_latency = retrieve_products(
             user_query=current_search_query,
             top_k=top_k
         )
@@ -663,7 +251,7 @@ def generate_answer(user_query, top_k=5):
 
         print("\nPerforming new product search.")
 
-        products = retrieve_products(
+        products, search_latency = retrieve_products(
             user_query=user_query,
             top_k=top_k
         )
@@ -679,11 +267,11 @@ def generate_answer(user_query, top_k=5):
 
         answer = "I couldn't find any relevant products."
 
-        conversation_history.append(
+        conversation.conversation_history.append(
             f"User: {user_query}"
         )
 
-        conversation_history.append(
+        conversation.conversation_history.append(
             f"Assistant: {answer}"
         )
 
@@ -704,42 +292,81 @@ def generate_answer(user_query, top_k=5):
     # ========================================================
 
     prompt = build_prompt(
-        user_query=user_query,
-        retrieved_chunks=retrieved_chunks,
-        conversation_history=conversation_history,
-        previous_user_query=last_user_query,
-        is_follow_up=follow_up
-    )
+    user_query=user_query,
+    retrieved_chunks=retrieved_chunks,
+    conversation_history=conversation.conversation_history,
+    previous_user_query=conversation.last_user_query,
+    is_follow_up=follow_up
+)
 
 
     # ========================================================
     # STEP 8: CALL OPENAI
     # ========================================================
 
+    llm_start_time = time.perf_counter()
+
     response = client.responses.create(
         model=MODEL,
         input=prompt
     )
 
-        # Track token usage and cost
-    track_usage(response)
+    llm_latency = time.perf_counter() - llm_start_time
+    # Track token usage and cost
+    usage_data = track_usage(response)
 
     # ========================================================
     # STEP 9: GET ANSWER
     # ========================================================
 
     answer = response.output_text
+    total_latency = time.perf_counter() - request_start_time
 
+    # ============================================================
+    # DETERMINE QUERY TYPE
+    # ============================================================
+
+    if follow_up:
+        query_type = "follow_up"
+
+    elif constraint_query:
+        query_type = "constraint_search"
+
+    else:
+        query_type = "new_search"
+
+
+    monitoring.log_request(
+        user_query=user_query,
+        search_query=current_search_query,
+        query_type=query_type,
+        filters=None,
+        retrieved_product_ids=[
+            product.get("id")
+            for product in products
+        ],
+        num_results=len(products),
+        search_latency=search_latency,
+        llm_latency=llm_latency,
+        total_latency=total_latency,
+        model=MODEL,
+        input_tokens=usage_data["input_tokens"],
+        output_tokens=usage_data["output_tokens"],
+        total_tokens=usage_data["total_tokens"],
+        llm_cost=usage_data["total_cost"],
+        response=answer,
+        error=None,
+    )
 
     # ========================================================
     # STEP 10: SAVE CONVERSATION
     # ========================================================
 
-    conversation_history.append(
+    conversation.conversation_history.append(
         f"User: {user_query}"
     )
 
-    conversation_history.append(
+    conversation.conversation_history.append(
         f"Assistant: {answer}"
     )
 
@@ -753,12 +380,11 @@ def generate_answer(user_query, top_k=5):
 
     if not follow_up:
 
-        last_retrieved_products = products
+        conversation.last_retrieved_products = products
 
-        last_user_query = user_query
+        conversation.last_user_query = user_query
 
-        last_search_query = current_search_query
-
+        conversation.last_search_query = current_search_query
 
     return answer
 
@@ -831,17 +457,7 @@ def main():
         # ----------------------------------------------------
 
         if user_query.lower() == "clear":
-            conversation_history.clear()
-
-            global last_retrieved_products
-            global last_user_query
-            global last_search_query
-            global last_search_filters
-
-            last_retrieved_products = []
-            last_user_query = None
-            last_search_query = None
-            last_search_filters = {}
+            conversation.clear_conversation()
 
             print("\nConversation history cleared.")
 
@@ -872,4 +488,7 @@ def main():
 # ============================================================
 
 if __name__ == "__main__":
+
+    monitoring.init_monitoring_db()
+
     main()
